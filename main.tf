@@ -1,22 +1,19 @@
+locals {
+
+  tags          = {
+    system      = "Learn"
+    partner     = "JJ"
+    environment = "Demo"
+  }
+}
+
 resource "random_pet" "prefix" {}
-
-variable "appId" {
-}
-
-variable "password" {
-}
-
-provider "azurerm" {
-  version = "~> 1.27.0"
-}
 
 resource "azurerm_resource_group" "default" {
   name     = "${random_pet.prefix.id}-rg"
   location = "West US 2"
 
-  tags = {
-    environment = "Demo"
-  }
+  tags = local.tags
 }
 
 resource "azurerm_kubernetes_cluster" "default" {
@@ -42,15 +39,5 @@ resource "azurerm_kubernetes_cluster" "default" {
     enabled = true
   }
 
-  tags = {
-    environment = "Demo"
-  }
-}
-
-output "resource_group_name" {
-  value = azurerm_resource_group.default.name
-}
-
-output "kubernetes_cluster_name" {
-  value = azurerm_kubernetes_cluster.default.name
+  tags = local.tags
 }
